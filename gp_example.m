@@ -10,12 +10,15 @@
 % multi input gp for control
 % http://www.dcs.gla.ac.uk/~rod/publications/KocGirBanMur03.pdf
 
+% gp for uav sys id
+% file:///home/andy/Downloads/Hemakumara2013_ICRA_GaussianProcess.pdf
+
 close all
 clear all
 clc
 
-x = [-1.5, -1.0, -0.75, -0.4, -0.25, 0.00];%, 7, 4, 1, 2];
-y = [-1.6, -1.1, -0.4, 0.1, 0.5, 0.75];%, 1, -1, -1.5, 0];
+x = [-1.5, -1.0, -0.75, -0.4, -0.25, 0.00, 7, 4, 1, 2];
+y = [-1.6, -1.1, -0.4, 0.1, 0.5, 0.75, 1, -1, -1.5, 0];
 s = ones(length(x),1)*0.3;
 
 l = 1; % length parameter - how much distance between x's matters, large l means the distance matters less
