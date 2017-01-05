@@ -24,9 +24,10 @@ s = ones(length(x),1)*0.3;
 l = 1; % length parameter - how much distance between x's matters, large l means the distance matters less
 sigma_f = 1.27; % maximum allowable covariance - large with functions with large range of y values
 sigma_f_sq = sigma_f^2;
-sigma_n = 0.3;
+sigma_n = 0.3; % actual uncertainty in the data
 sigma_n_sq = sigma_n^2;
 
+% build covariance matrix
 k =zeros(length(x), length(x));
 for i=1:length(x)
     for j=1:length(x)
@@ -66,6 +67,13 @@ while xs < x_max + 1;
     end
     kss = sigma_f_sq * exp(-(xs-xs)^2/2*l^2) + sigma_n_sq*kroneckerDelta;
 
+    
+    % this is the computationally expensive bit, you can reduce it when the
+    % number of samples gets large by selecting only the sensor
+    % measurements that are in the local vicinity of the point you care
+    % about. The idea being, snesor measurments from very different
+    % attitudes, ect don't matter as much as sensor readings from nearby
+    % the point of interest
     ys = ks/k*y';
     yv = kss-ks/k*ks';
 
