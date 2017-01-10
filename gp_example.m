@@ -16,6 +16,10 @@
 % I think to go to multiple observations, X(i) is a vector not number, for covariance you bustract the complete whole vector
 % to get the distance between each entry and then sum the distances. so for X(i) = [1xn] -> xs = sum_j=1^n (X(i,j) - X'(l,j))^2
 
+% next goal is to include a model of a car and predict it's model as it drives around, from x,y,theta,xdot,ydot,thetadot predict x',y',theta',xdot',ydot',thetadot'
+% really this means predicting just the dots and then solving for the velocity. I think a key will be to use greedy selection of points so that 
+% the matrix inverse is manageable
+
 close all
 clear all
 clc
