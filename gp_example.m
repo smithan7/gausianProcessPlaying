@@ -13,6 +13,9 @@
 % gp for uav sys id
 % file:///home/andy/Downloads/Hemakumara2013_ICRA_GaussianProcess.pdf
 
+% I think to go to multiple observations, X(i) is a vector not number, for covariance you bustract the complete whole vector
+% to get the distance between each entry and then sum the distances. so for X(i) = [1xn] -> xs = sum_j=1^n (X(i,j) - X'(l,j))^2
+
 close all
 clear all
 clc
