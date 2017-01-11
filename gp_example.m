@@ -20,6 +20,9 @@
 % really this means predicting just the dots and then solving for the velocity. I think a key will be to use greedy selection of points so that 
 % the matrix inverse is manageable
 
+% maybe as part of the vector include my state information? for puruit evasion.
+
+
 close all
 clear all
 clc
