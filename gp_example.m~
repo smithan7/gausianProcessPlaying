@@ -50,12 +50,7 @@ for i=1:length(x)
     end
 end
 
-z = zeros(1, length(y));
-for i=1:length(x)
-    [ym, yv] = gp_predict(x(i), x, y, k, sigma_f_sq, sigma_n_sq, l);
-    
-    z(i) = log();
-end
+for i=1:length
 
 
 % this is strictly just to plot over the range the mean value of the GP
