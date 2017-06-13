@@ -1,11 +1,8 @@
 function [ y_m, y_v ] = gp_predict( xp, x, y, sigma_f_sq, sigma_n_sq, l, r )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-    if nargin == 6
-        r = zeros(length(x),length(x));
-    else
-        r = diag(r);
-    end
+    if numarg == 6
+        
 
     % build covariance matrix
     k =zeros(length(x), length(x));
