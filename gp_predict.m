@@ -1,11 +1,17 @@
-function [ y_m, y_v ] = gp_predict( xp, x, y, sigma_f_sq, sigma_n_sq, l, r )
+function [ y_m, y_v ] = gp_predict( xp, x, y, r )
 %UNTITLED Summary of this function goes here
 %   Detailed explanation goes here
-    if nargin == 6
+    if nargin == 3
         r = zeros(length(x),length(x));
     else
         r = diag(r);
     end
+    
+    l = 1; % length parameter - how much distance between x's matters, large l means the distance matters less
+    sigma_f = 1.27; % maximum allowable covariance - large with functions with large range of y values
+    sigma_f_sq = sigma_f^2;
+    sigma_n = 0.2; % actual uncertainty in the data
+    sigma_n_sq = sigma_n^2;
 
     % build covariance matrix
     k =zeros(length(x), length(x));

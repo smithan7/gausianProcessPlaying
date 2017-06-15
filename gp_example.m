@@ -31,39 +31,73 @@ clc
 %y = [-1.6, -1.1, -0.4, 0.1, 0.5, 0.75, 1, -1, -1.5, 0, 2,-3];
 
 x = 0.1:0.1:10;
-y = sin(x) + randn(1,length(x))/5;
+y = sin(x) + randn(1,length(x))/10;
 
+for i=1:2
+    s = randi(7);
+    e = s + randi(10-s);
+    xp = s + randi(1000)/1000:0.1:e;
+    yp = sin(xp) + randn(1,length(xp))/randi(5)+1;
+
+    x = horzcat(x,xp);
+    y = horzcat(y,yp);
+end
 s = ones(length(x),1)*0.2;
-
-l = 1; % length parameter - how much distance between x's matters, large l means the distance matters less
-sigma_f = 1.27; % maximum allowable covariance - large with functions with large range of y values
-sigma_f_sq = sigma_f^2;
-sigma_n = 0.2; % actual uncertainty in the data
-sigma_n_sq = sigma_n^2;
 
 % GP 1 is normal homeoscedastic GP
 yp = zeros(1, length(y));
+yv = zeros(1, length(y));
 z = zeros(1, length(y));
+tv = yp;
 for i=1:length(x)
-    [yp(i), yv] = gp_predict(x(i) + randn()/100, x, y, sigma_f_sq, sigma_n_sq, l);
-    
+    [yp(i), yv(i)] = gp_predict(x(i)+randn()/100, x, y);
+    tv(i) = abs(y(i)-yp(i));
     z(i) = log(0.5*(y(i)-yp(i))^2);
 end
 
-% GP 2 on noise from GP 1
-r = zeros(1, length(y));
 for i=1:length(x)
-    [r(i), nv] = gp_predict(x(i) + randn()/100, x, z, sigma_f_sq, sigma_n_sq, l);
+    [r(i), nv] = gp_predict(x(i)+randn()/100, x, tv);
 end
 
-% GP 3 = GP 1 + R found from GP 2
-ypp = zeros(1, length(y));
-for i=1:length(x)
-    [ypp(i), nv] = gp_predict(x(i) + randn()/100, x, z, sigma_f_sq, sigma_n_sq, l, r);
+figure(1)
+errorbar(x,yp,yv,'r.');
+hold on
+plot(x,y,'go')
+
+figure(2)
+errorbar(x,yp,r,'r.');
+hold on
+plot(x,y,'go')
+
+yv = zeros(1,length(y));
+for gp_iter=1:100
+    % GP 2 on noise from GP 1
+    r = zeros(1, length(y));
+    for i=1:length(x)
+        [r(i), nv] = gp_predict(x(i)+randn()/100, x, tv);
+    end
+
+    % GP 3 = GP 1 + R found from GP 2
+    for i=1:length(x)
+        [yp(i), yv(i)] = gp_predict(x(i)+randn()/100, x, y, r);
+        tv(i) = abs(y(i)-yp(i));
+        z(i) = log(0.5*(y(i)-yp(i))^2);%abs(y(i)-yp(i));%
+    end
+    
+    figure(3)
+    hold off
+    errorbar(x,yp,r, 'r.')
+    hold on
+    plot(x,y,'go',x,yp,'rx')
+    title(gp_iter)
+    xlabel('x')
+    ylabel('y')
+    
+    pause(1)
 end
 
 % this is strictly just to plot over the range the mean value of the GP
-figure
+figure(4)
 hold all
 % plot function over range
 x_min = min(x);
@@ -72,36 +106,15 @@ xs = x_min - 1;
 while xs < x_max + 1
     xs = xs + 0.1;
     
-    [ys, yv] = gp_predict(xs, x, y, sigma_f_sq, sigma_n_sq, l);
+    [ys, yv] = gp_predict(xs, x, y, r);
 
     errorbar(xs,ys,yv, 'g.')
 end
 % plot actual data
-errorbar(x,y,s, 'r.')
+%errorbar(x,y,s, 'r.')
 plot(x,y,'k.')
 xlabel('x')
 ylabel('y')
 % finish pretty plot
-
-figure
-subplot(2,1,1)
-plot(x,y,'bo',x,yp,'rx')
-legend('Truth','GP1')
-ylabel('y')
-subplot(2,1,2)
-plot(x,z,'bx')
-ylabel('var')
-xlabel('x')
-
-figure
-plot(x,r,'rx')
-xlabel('x')
-ylabel('r(x)~GP2(var(x))')
-
-figure
-plot(x,ypp,'rx',x,y,'bo')
-legend('GP3','Truth')
-xlabel('x')
-ylabel('y')
 
 
