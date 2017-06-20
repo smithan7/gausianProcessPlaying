@@ -60,17 +60,19 @@ for i=1:length(x)
 end
 
 figure(1)
+title('GP')
 errorbar(x,yp,yv,'r.');
 hold on
 plot(x,y,'go')
 
 figure(2)
+title('HGP')
 errorbar(x,yp,r,'r.');
 hold on
 plot(x,y,'go')
 
 yv = zeros(1,length(y));
-for gp_iter=1:100
+for gp_iter=1:5
     % GP 2 on noise from GP 1
     r = zeros(1, length(y));
     for i=1:length(x)
@@ -85,6 +87,7 @@ for gp_iter=1:100
     end
     
     figure(3)
+    title('HGP')
     hold off
     errorbar(x,yp,r, 'r.')
     hold on

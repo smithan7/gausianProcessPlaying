@@ -28,21 +28,13 @@ clear all
 clc
 
 x_range = 5;
-n_pts = 1000;
+n_pts = 500;
 
-for i=1:floor(n_pts*0.9)
+for i=1:n_pts
     x(1,i) = rand()*(2*x_range)-x_range;
     x(2,i) = rand()*(2*x_range)-x_range;
-    y(i) = x(1,i)*sin(x(2,i))+randn()/2;
+    y(i) = x(1,i)*sin(x(2,i));
 end
-
-for i=floor(n_pts*0.9):n_pts
-    x(1,i) = rand()*(2*x_range)-x_range;
-    x(2,i) = rand()*(2*x_range)-x_range;
-    y(i) = x(1,i)*sin(x(2,i))+randn()/4;
-end
-
-[ x, y ] = gp_sparse_2d( x, y, 95 );
 
 xcnt = 0;
 for xs1 = -x_range:0.5:x_range
@@ -59,14 +51,9 @@ end
 figure(1)
 surf(-x_range:0.5:x_range,-x_range:0.5:x_range,ys,yv)
 hold on
-plot3(x(2,:),x(1,:),y, 'ro')
-
+plot3(x(1,:),x(2,:),y, 'ro')
 figure(2)
 surf(-x_range:0.5:x_range,-x_range:0.5:x_range,ye)
 
 figure(3)
 surf(-x_range:0.5:x_range,-x_range:0.5:x_range,yt)
-
-figure(4)
-plot3(x(2,:),x(1,:),y, 'ro')
-grid on
